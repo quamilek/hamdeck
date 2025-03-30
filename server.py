@@ -53,6 +53,28 @@ def getOmnirig():
 global omniClient
 omniClient = getOmnirig()
 
+class RigCommand():
+
+    @staticmethod
+    def setMode(mode):
+        omniClient.setMode(mode)
+
+    @staticmethod
+    def toggleSplit():
+        split = omniClient.getParam("Split")
+        if split == omniClient.SPLIT_OFF:
+            omniClient.setSplit(omniClient.SPLIT_ON)
+        elif split == omniClient.SPLIT_ON:
+            omniClient.setSplit(omniClient.SPLIT_OFF)
+
+    @staticmethod
+    def setSplit(splitValue):
+        currentFreq = omniClient.getParam("Freq")
+        currentVfo = omniClient.getParam("Vfo")
+        if currentVfo == omniClient.VF
+        
+        
+
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
@@ -73,16 +95,34 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header('Content-type', 'text/plain')
             self.end_headers()
-            omniClient.setMode(omniClient.MODE_CW_U)
+            # omniClient.setMode(omniClient.MODE_CW_U)
+            RigCommand.setMode(omniClient.CW_U)
             
             self.wfile.write(b'mode CW set')
         elif self.path == '/mode/usb':
             self.send_response(200)
             self.send_header('Content-type', 'text/plain')
             self.end_headers()
-            omniClient.setMode(omniClient.MODE_SSB_U)
+            RigCommand.setMode(omniClient.MODE_SSB_U)
             
-            self.wfile.write(b'mode CW set')
+        elif self.path == '/mode/lsb':
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            RigCommand.setMode(omniClient.MODE_SSB_L)
+            
+        elif self.path == '/mode/split':
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            RigCommand.toggleSplit()
+        
+        elif self.path == '/mode/split/1':
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            RigCommand.setSplit(1)
+            
         else:
             self.send_error(404, 'File not found')
 
